@@ -1,7 +1,8 @@
-package api
+package argo
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -17,6 +18,7 @@ type (
 )
 
 func New(opt *ClientOptions) Argo {
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	httpClient := &http.Client{}
 	if opt.Client != nil {
 		httpClient = opt.Client
@@ -42,7 +44,7 @@ func (a argo) requestAPI(opt *requestOptions) (*http.Response, error) {
 		body, _ = json.Marshal(opt.body)
 	}
 	request, err := http.NewRequest(opt.method, finalURL, bytes.NewBuffer(body))
-	request.Header.Set("Authorization", a.token)
+	request.Header.Set("Authorization", "Bearer "+a.token)
 	request.Header.Set("Content-Type", "application/json")
 
 	response, err := a.client.Do(request)

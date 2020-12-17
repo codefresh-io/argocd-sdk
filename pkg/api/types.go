@@ -1,4 +1,4 @@
-package api
+package argo
 
 import "net/http"
 
@@ -27,7 +27,7 @@ type (
 	requestOptions struct {
 		path   string
 		method string
-		body   map[string]interface{}
+		body   interface{}
 		qs     map[string]string
 	}
 )
