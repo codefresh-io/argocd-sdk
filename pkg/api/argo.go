@@ -19,20 +19,6 @@ type (
 	}
 )
 
-func New(opt *ClientOptions) Argo {
-	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-	httpClient := &http.Client{}
-	if opt.Client != nil {
-		httpClient = opt.Client
-	}
-
-	return &argo{
-		host:   opt.Host,
-		token:  opt.Auth.Token,
-		client: httpClient,
-	}
-}
-
 func GetToken(username string, password string, host string) (string, error) {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
@@ -69,6 +55,20 @@ func GetToken(username string, password string, host string) (string, error) {
 	defer resp.Body.Close()
 
 	return result["token"].(string), nil
+}
+
+func New(opt *ClientOptions) Argo {
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	httpClient := &http.Client{}
+	if opt.Client != nil {
+		httpClient = opt.Client
+	}
+
+	return &argo{
+		host:   opt.Host,
+		token:  opt.Auth.Token,
+		client: httpClient,
+	}
 }
 
 func (a argo) Clusters() ClusterApi {
