@@ -15,6 +15,7 @@ type (
 	Argo interface {
 		requestAPI(*requestOptions) (*http.Response, error)
 		Clusters() ClusterApi
+		Auth() AuthApi
 	}
 )
 
@@ -73,6 +74,11 @@ func GetToken(username string, password string, host string) (string, error) {
 func (a argo) Clusters() ClusterApi {
 	return newClusterApi(a)
 }
+
+func (a argo) Auth() AuthApi {
+	return newAuthApi(a)
+}
+
 func (a argo) requestAPI(opt *requestOptions) (*http.Response, error) {
 	var body []byte
 	finalURL := fmt.Sprintf("%s%s", a.host, opt.path)

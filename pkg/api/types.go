@@ -18,6 +18,10 @@ type (
 		Client *http.Client
 	}
 
+	api struct {
+		argo argo
+	}
+
 	argo struct {
 		token  string
 		host   string
