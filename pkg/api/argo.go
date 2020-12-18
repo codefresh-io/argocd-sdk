@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/tls"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -31,12 +32,50 @@ func New(opt *ClientOptions) Argo {
 	}
 }
 
-func (a argo) Clusters() ClusterApi {
-	return newClusterApi(a)
+func GetToken(username string, password string, host string) (string, error) {
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	client := http.Client{Transport: tr}
+
+	message := map[string]interface{}{
+		"username": username,
+		"password": password,
+	}
+
+	bytesRepresentation, err := json.Marshal(message)
+	if err != nil {
+		return "", errors.New("application error, cant retrieve argo token")
+	}
+
+	resp, err := client.Post(host+"/api/v1/session", "application/json", bytes.NewBuffer(bytesRepresentation))
+	if err != nil {
+		return "", err
+	}
+
+	if resp.StatusCode == 401 {
+		return "", errors.New("cant retrieve argocd token, permission denied")
+	}
+
+	var result map[string]interface{}
+
+	err = json.NewDecoder(resp.Body).Decode(&result)
+
+	if err != nil {
+		return "", err
+	}
+
+	defer resp.Body.Close()
+
+	return result["token"].(string), nil
 }
-func (a argo) requestAPI(opt *requestOptions) (*http.Response, error) {
+
+func (c argo) Clusters() ClusterApi {
+	return newClusterApi(c)
+}
+func (c argo) requestAPI(opt *requestOptions) (*http.Response, error) {
 	var body []byte
-	finalURL := fmt.Sprintf("%s%s", a.host, opt.path)
+	finalURL := fmt.Sprintf("%s%s", c.host, opt.path)
 	if opt.qs != nil {
 		finalURL += toQS(opt.qs)
 	}
@@ -44,10 +83,10 @@ func (a argo) requestAPI(opt *requestOptions) (*http.Response, error) {
 		body, _ = json.Marshal(opt.body)
 	}
 	request, err := http.NewRequest(opt.method, finalURL, bytes.NewBuffer(body))
-	request.Header.Set("Authorization", "Bearer "+a.token)
+	request.Header.Set("Authorization", "Bearer "+c.token)
 	request.Header.Set("Content-Type", "application/json")
 
-	response, err := a.client.Do(request)
+	response, err := c.client.Do(request)
 	if err != nil {
 		return response, err
 	}
