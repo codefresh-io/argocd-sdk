@@ -70,12 +70,12 @@ func GetToken(username string, password string, host string) (string, error) {
 	return result["token"].(string), nil
 }
 
-func (c argo) Clusters() ClusterApi {
-	return newClusterApi(c)
+func (a argo) Clusters() ClusterApi {
+	return newClusterApi(a)
 }
-func (c argo) requestAPI(opt *requestOptions) (*http.Response, error) {
+func (a argo) requestAPI(opt *requestOptions) (*http.Response, error) {
 	var body []byte
-	finalURL := fmt.Sprintf("%s%s", c.host, opt.path)
+	finalURL := fmt.Sprintf("%s%s", a.host, opt.path)
 	if opt.qs != nil {
 		finalURL += toQS(opt.qs)
 	}
@@ -83,10 +83,10 @@ func (c argo) requestAPI(opt *requestOptions) (*http.Response, error) {
 		body, _ = json.Marshal(opt.body)
 	}
 	request, err := http.NewRequest(opt.method, finalURL, bytes.NewBuffer(body))
-	request.Header.Set("Authorization", "Bearer "+c.token)
+	request.Header.Set("Authorization", "Bearer "+a.token)
 	request.Header.Set("Content-Type", "application/json")
 
-	response, err := c.client.Do(request)
+	response, err := a.client.Do(request)
 	if err != nil {
 		return response, err
 	}
