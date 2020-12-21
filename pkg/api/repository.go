@@ -1,5 +1,7 @@
 package argo
 
+import "errors"
+
 type (
 	RepositoryApi interface {
 		CreateRepository(CreateRepositoryOpt) error
@@ -31,6 +33,10 @@ func (api *api) CreateRepository(requestOpt CreateRepositoryOpt) error {
 	if err != nil {
 		return err
 	}
+	if resp.StatusCode != 200 {
+		return errors.New(resp.Status)
+	}
+
 	err = api.argo.decodeResponseInto(resp, &r)
 	return err
 }
