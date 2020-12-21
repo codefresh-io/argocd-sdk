@@ -79,6 +79,10 @@ func (a argo) Auth() AuthApi {
 	return newAuthApi(a)
 }
 
+func (a argo) Repository() RepositoryApi {
+	return newRepositoryApi(a)
+}
+
 func (a argo) requestAPI(opt *requestOptions) (*http.Response, error) {
 	var body []byte
 	finalURL := fmt.Sprintf("%s%s", a.host, opt.path)
