@@ -16,6 +16,7 @@ type (
 		requestAPI(*requestOptions) (*http.Response, error)
 		Clusters() ClusterApi
 		Auth() AuthApi
+		Repository() RepositoryApi
 	}
 )
 
