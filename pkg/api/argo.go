@@ -17,6 +17,7 @@ type (
 		Clusters() ClusterApi
 		Auth() AuthApi
 		Repository() RepositoryApi
+		Application() ApplicationApi
 	}
 )
 
@@ -82,6 +83,10 @@ func (a argo) Auth() AuthApi {
 
 func (a argo) Repository() RepositoryApi {
 	return newRepositoryApi(a)
+}
+
+func (a argo) Application() ApplicationApi {
+	return newApplicationApi(a)
 }
 
 func (a argo) requestAPI(opt *requestOptions) (*http.Response, error) {
