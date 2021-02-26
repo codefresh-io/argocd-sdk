@@ -35,6 +35,94 @@ type (
 			} `json:"source"`
 		} `json:"spec"`
 	}
+
+	Application struct {
+		Items []ApplicationItem
+	}
+
+	ArgoApplication struct {
+		Status struct {
+			Health struct {
+				Status string
+			}
+			Sync struct {
+				Status   string
+				Revision string
+			}
+			History        []ApplicationHistoryItem
+			OperationState struct {
+				FinishedAt string
+				SyncResult struct {
+					Revision string
+				}
+			}
+		}
+		Spec struct {
+			Source struct {
+				RepoURL string
+			}
+			Project    string
+			SyncPolicy struct {
+				Automated interface{}
+			}
+		}
+		Metadata struct {
+			Name string
+		}
+	}
+
+	ApplicationHistoryItem struct {
+		Id       int64
+		Revision string
+	}
+
+	ApplicationItem struct {
+		Metadata ApplicationMetadata `json:"metadata"`
+		Spec     ApplicationSpec     `json:"spec"`
+	}
+
+	ApplicationMetadata struct {
+		Name        string `json:"name"`
+		UID         string `json:"uid"`
+		Namespace   string `json:"namespace"`
+		ClusterName string `json:"clusterName"`
+	}
+
+	ApplicationSpecDestination struct {
+		Server    string `json:"server"`
+		Name      string `json:"name"`
+		Namespace string `json:"namespace"`
+	}
+
+	ApplicationSpec struct {
+		Project     string                     `json:"project"`
+		Destination ApplicationSpecDestination `json:"destination"`
+	}
+
+	ResourceTree struct {
+		Nodes []Node
+	}
+
+	Node struct {
+		Kind   string
+		Uid    string
+		Health Health
+	}
+
+	Health struct {
+		Status string `json:"status"`
+	}
+
+	ManagedResource struct {
+		Items []ManagedResourceItem
+	}
+
+	ManagedResourceItem struct {
+		Kind        string
+		TargetState string
+		LiveState   string
+		Name        string
+	}
 )
 
 func newApplicationApi(argo argo) ApplicationApi {
