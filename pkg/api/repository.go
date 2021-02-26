@@ -5,6 +5,19 @@ import "errors"
 type (
 	RepositoryApi interface {
 		CreateRepository(CreateRepositoryOpt) error
+		GetRepositories() ([]RepositoryItem, error)
+	}
+
+	Repository struct {
+		Items []RepositoryItem
+	}
+
+	RepositoryItem struct {
+		Insecure bool   `json:"insecure"`
+		Name     string `json:"name"`
+		Repo     string `json:"repo"`
+		Type     string `json:"type"`
+		Username string `json:"username"`
 	}
 
 	CreateRepositoryOpt struct {
@@ -21,6 +34,28 @@ type (
 
 func newRepositoryApi(argo argo) RepositoryApi {
 	return &api{argo}
+}
+
+func (api *api) GetRepositories() ([]RepositoryItem, error) {
+
+	resp, err := api.argo.requestAPI(&requestOptions{
+		path:   "/api/v1/repositories",
+		method: "GET",
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	var result Repository
+
+	err = api.argo.decodeResponseInto(resp, &result)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result.Items, nil
 }
 
 func (api *api) CreateRepository(requestOpt CreateRepositoryOpt) error {

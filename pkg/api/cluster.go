@@ -3,10 +3,7 @@ package argo
 type (
 	ClusterApi interface {
 		CreateCluster(clusterOpt ClusterOpt) (*map[string]interface{}, error)
-	}
-
-	cluster struct {
-		argo argo
+		GetClusters() ([]ClusterItem, error)
 	}
 
 	TlsClientConfig struct {
@@ -24,17 +21,48 @@ type (
 		Server string        `json:"server"`
 		Config ClusterConfig `json:"config"`
 	}
+
+	ClusterItem struct {
+		Name   string `json:"name"`
+		Server string `json:"server"`
+	}
+
+	Cluster struct {
+		Items []ClusterItem
+	}
 )
 
 func newClusterApi(argo argo) ClusterApi {
-	return &cluster{argo}
+	return &api{argo}
 }
 
-func (cluster *cluster) CreateCluster(clusterOpt ClusterOpt) (*map[string]interface{}, error) {
+func (api *api) GetClusters() ([]ClusterItem, error) {
+
+	resp, err := api.argo.requestAPI(&requestOptions{
+		path:   "/api/v1/clusters",
+		method: "GET",
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	var result Cluster
+
+	err = api.argo.decodeResponseInto(resp, &result)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result.Items, nil
+}
+
+func (api *api) CreateCluster(clusterOpt ClusterOpt) (*map[string]interface{}, error) {
 
 	r := make(map[string]interface{})
 
-	resp, err := cluster.argo.requestAPI(&requestOptions{
+	resp, err := api.argo.requestAPI(&requestOptions{
 		path:   "/api/v1/clusters",
 		method: "POST",
 		body:   clusterOpt,
@@ -43,7 +71,7 @@ func (cluster *cluster) CreateCluster(clusterOpt ClusterOpt) (*map[string]interf
 		},
 	})
 
-	err = cluster.argo.decodeResponseInto(resp, &r)
+	err = api.argo.decodeResponseInto(resp, &r)
 
 	return &r, err
 }
