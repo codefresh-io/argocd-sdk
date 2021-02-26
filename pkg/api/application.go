@@ -8,7 +8,7 @@ import (
 type (
 	ApplicationApi interface {
 		CreateApplication(CreateApplicationOpt) error
-		GetApplications(token string, host string) ([]ApplicationItem, error)
+		GetApplications() ([]ApplicationItem, error)
 		GetResourceTree(applicationName string) (*ResourceTree, error)
 		GetManagedResources(applicationName string) (*ManagedResource, error)
 		GetResourceTreeAll(applicationName string) (interface{}, error)
@@ -154,7 +154,7 @@ func (api *api) CreateApplication(requestOpt CreateApplicationOpt) error {
 	return err
 }
 
-func (api *api) GetApplications(token string, host string) ([]ApplicationItem, error) {
+func (api *api) GetApplications() ([]ApplicationItem, error) {
 
 	resp, err := api.argo.requestAPI(&requestOptions{
 		path:   "/api/v1/applications",

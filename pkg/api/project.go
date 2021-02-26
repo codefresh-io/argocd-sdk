@@ -2,7 +2,7 @@ package argo
 
 type (
 	ProjectApi interface {
-		GetProjects(token string, host string) ([]ProjectItem, error)
+		GetProjects() ([]ProjectItem, error)
 	}
 
 	Project struct {
@@ -23,7 +23,7 @@ func newProjectApi(argo argo) ProjectApi {
 	return &api{argo}
 }
 
-func (api *api) GetProjects(token string, host string) ([]ProjectItem, error) {
+func (api *api) GetProjects() ([]ProjectItem, error) {
 
 	resp, err := api.argo.requestAPI(&requestOptions{
 		path:   "/api/v1/projects",
