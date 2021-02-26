@@ -9,6 +9,7 @@ type (
 	ApplicationApi interface {
 		CreateApplication(CreateApplicationOpt) error
 		GetApplications(token string, host string) ([]ApplicationItem, error)
+		GetResourceTree(applicationName string) (*ResourceTree, error)
 	}
 
 	CreateApplicationOpt struct {
