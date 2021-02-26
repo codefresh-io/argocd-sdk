@@ -12,6 +12,7 @@ type (
 		GetResourceTree(applicationName string) (*ResourceTree, error)
 		GetManagedResources(applicationName string) (*ManagedResource, error)
 		GetResourceTreeAll(applicationName string) (interface{}, error)
+		GetApplication(application string) (map[string]interface{}, error)
 	}
 
 	CreateApplicationOpt struct {
