@@ -8,6 +8,7 @@ import (
 type (
 	AuthApi interface {
 		UpdatePassword(UpdatePasswordOpt) error
+		CheckToken() error
 	}
 
 	UpdatePasswordOpt struct {
