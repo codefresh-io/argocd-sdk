@@ -10,6 +10,8 @@ type (
 		CreateApplication(CreateApplicationOpt) error
 		GetApplications(token string, host string) ([]ApplicationItem, error)
 		GetResourceTree(applicationName string) (*ResourceTree, error)
+		GetManagedResources(applicationName string) (*ManagedResource, error)
+		GetResourceTreeAll(applicationName string) (interface{}, error)
 	}
 
 	CreateApplicationOpt struct {
