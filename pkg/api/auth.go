@@ -1,5 +1,10 @@
 package argo
 
+import (
+	"errors"
+	"fmt"
+)
+
 type (
 	AuthApi interface {
 		UpdatePassword(UpdatePasswordOpt) error
@@ -28,4 +33,30 @@ func (api *api) UpdatePassword(requestOpt UpdatePasswordOpt) error {
 	}
 	err = api.argo.decodeResponseInto(resp, &r)
 	return err
+}
+
+func (api *api) CheckToken() error {
+
+	resp, err := api.argo.requestAPI(&requestOptions{
+		path:   "/api/v1/account",
+		method: "GET",
+	})
+
+	if err != nil {
+		return err
+	}
+
+	var result map[string]interface{}
+
+	err = api.argo.decodeResponseInto(resp, &result)
+
+	if err != nil {
+		return err
+	}
+
+	if result["error"] != nil {
+		return errors.New(fmt.Sprintf("Failed to verify argocd token, reason:  %v", result["error"]))
+	}
+
+	return nil
 }

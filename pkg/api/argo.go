@@ -18,6 +18,8 @@ type (
 		Auth() AuthApi
 		Repository() RepositoryApi
 		Application() ApplicationApi
+		Project() ProjectApi
+		Version() VersionApi
 	}
 )
 
@@ -87,6 +89,14 @@ func (a argo) Repository() RepositoryApi {
 
 func (a argo) Application() ApplicationApi {
 	return newApplicationApi(a)
+}
+
+func (a argo) Project() ProjectApi {
+	return newProjectApi(a)
+}
+
+func (a argo) Version() VersionApi {
+	return newVersionApi(a)
 }
 
 func (a argo) requestAPI(opt *requestOptions) (*http.Response, error) {

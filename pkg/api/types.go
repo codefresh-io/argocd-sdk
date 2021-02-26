@@ -3,6 +3,7 @@ package argo
 import "net/http"
 
 type (
+
 	// AuthOptions
 	AuthOptions struct {
 
