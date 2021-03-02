@@ -71,7 +71,8 @@ type (
 			}
 		}
 		Metadata struct {
-			Name string
+			Name   string
+			Labels map[string]string
 		}
 	}
 
