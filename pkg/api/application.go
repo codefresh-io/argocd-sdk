@@ -57,7 +57,12 @@ type (
 			OperationState struct {
 				FinishedAt string
 				SyncResult struct {
-					Revision string
+					Revision  string
+					Resources []struct {
+						Kind    string
+						Name    string
+						Message string
+					}
 				}
 			}
 		}
