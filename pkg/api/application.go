@@ -44,6 +44,12 @@ type (
 		Items []ApplicationItem
 	}
 
+	SyncResultResource struct {
+		Kind    string
+		Name    string
+		Message string
+	}
+
 	ArgoApplication struct {
 		Status struct {
 			Health struct {
@@ -58,11 +64,7 @@ type (
 				FinishedAt string
 				SyncResult struct {
 					Revision  string
-					Resources []struct {
-						Kind    string
-						Name    string
-						Message string
-					}
+					Resources []SyncResultResource
 				}
 			}
 		}
