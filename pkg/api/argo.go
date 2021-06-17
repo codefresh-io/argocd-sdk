@@ -45,7 +45,11 @@ func GetToken(username string, password string, host string) (string, error) {
 	}
 
 	if resp.StatusCode == 401 {
-		return "", errors.New("cant retrieve argocd token, permission denied")
+		return "", errors.New("failed to retrieve argocd token, permission denied")
+	}
+
+	if resp.StatusCode == 403 {
+		return "", errors.New("failed to retrieve argocd token, 403 forbidden")
 	}
 
 	var result map[string]interface{}
@@ -53,7 +57,7 @@ func GetToken(username string, password string, host string) (string, error) {
 	err = json.NewDecoder(resp.Body).Decode(&result)
 
 	if err != nil {
-		return "", err
+		return "", errors.New("failed to retrieve argocd token, cant parse response body to json ( Please verify that you are not using some gateway that may restrict access ) ")
 	}
 
 	defer resp.Body.Close()
