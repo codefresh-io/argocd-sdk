@@ -49,8 +49,13 @@ func GetToken(username string, password string, host string) (string, error) {
 	}
 
 	var result map[string]interface{}
+	//
+	//err = json.NewDecoder(resp.Body).Decode(&result)
 
-	err = json.NewDecoder(resp.Body).Decode(&result)
+	body, _ := ioutil.ReadAll(resp.Body)
+	bodyString := string(body)
+
+	fmt.Println(bodyString)
 
 	if err != nil {
 		return "", err
