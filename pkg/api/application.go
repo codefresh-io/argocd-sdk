@@ -69,6 +69,10 @@ type (
 			}
 		}
 		Spec struct {
+			Destination struct {
+				Namespace string
+				Server    string
+			}
 			Source struct {
 				RepoURL string
 			}
