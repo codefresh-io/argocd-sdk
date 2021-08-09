@@ -217,7 +217,7 @@ func (api *api) GetResourceTreeAll(applicationName string) (interface{}, error) 
 		method: "GET",
 	})
 
-	if resp != nil && resp.StatusCode != 200 {
+	if resp != nil && resp.StatusCode >= 400 {
 		return nil, errors.New(fmt.Sprintf("Failed to retrieve resources, reason %v", resp.Status))
 	}
 
