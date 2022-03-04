@@ -155,6 +155,9 @@ func (api *api) CreateApplication(requestOpt CreateApplicationOpt) error {
 		method: "POST",
 		body:   requestOpt,
 	})
+
+	defer resp.Body.Close()
+
 	if err != nil {
 		return err
 	}
@@ -176,6 +179,8 @@ func (api *api) GetApplications() ([]ApplicationItem, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	defer resp.Body.Close()
 
 	var result Application
 
@@ -199,6 +204,8 @@ func (api *api) GetResourceTree(applicationName string) (*ResourceTree, error) {
 		return nil, err
 	}
 
+	defer resp.Body.Close()
+
 	var result *ResourceTree
 
 	err = api.argo.decodeResponseInto(resp, &result)
@@ -216,6 +223,8 @@ func (api *api) GetResourceTreeAll(applicationName string) (interface{}, error) 
 		path:   "/api/v1/applications/" + applicationName + "/resource-tree",
 		method: "GET",
 	})
+
+	defer resp.Body.Close()
 
 	if resp != nil && resp.StatusCode >= 400 {
 		return nil, errors.New(fmt.Sprintf("Failed to retrieve resources tree, reason %v", resp.Status))
@@ -248,6 +257,8 @@ func (api *api) GetApplication(application string) (map[string]interface{}, erro
 		return nil, err
 	}
 
+	defer resp.Body.Close()
+
 	if resp.StatusCode != 200 {
 		// TODO: add error handling and move it to common place
 		return nil, errors.New(fmt.Sprintf("Failed to retrieve application, reason %v", resp.Status))
@@ -273,6 +284,8 @@ func (api *api) GetManagedResources(applicationName string) (*ManagedResource, e
 	if err != nil {
 		return nil, err
 	}
+
+	defer resp.Body.Close()
 
 	var result ManagedResource
 

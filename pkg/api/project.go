@@ -34,6 +34,8 @@ func (api *api) GetProjects() ([]ProjectItem, error) {
 		return nil, err
 	}
 
+	defer resp.Body.Close()
+
 	var result Project
 
 	err = api.argo.decodeResponseInto(resp, &result)

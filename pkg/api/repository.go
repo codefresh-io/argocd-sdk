@@ -47,6 +47,8 @@ func (api *api) GetRepositories() ([]RepositoryItem, error) {
 		return nil, err
 	}
 
+	defer resp.Body.Close()
+
 	var result Repository
 
 	err = api.argo.decodeResponseInto(resp, &result)
@@ -68,6 +70,9 @@ func (api *api) CreateRepository(requestOpt CreateRepositoryOpt) error {
 	if err != nil {
 		return err
 	}
+
+	defer resp.Body.Close()
+
 	if resp.StatusCode != 200 {
 		return errors.New(resp.Status)
 	}

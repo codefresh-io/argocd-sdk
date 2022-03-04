@@ -32,6 +32,9 @@ func (api *api) UpdatePassword(requestOpt UpdatePasswordOpt) error {
 	if err != nil {
 		return err
 	}
+
+	defer resp.Body.Close()
+
 	err = api.argo.decodeResponseInto(resp, &r)
 	return err
 }
@@ -46,6 +49,8 @@ func (api *api) CheckToken() error {
 	if err != nil {
 		return err
 	}
+
+	defer resp.Body.Close()
 
 	var result map[string]interface{}
 

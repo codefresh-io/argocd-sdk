@@ -25,6 +25,8 @@ func (api *api) GetVersion() (string, error) {
 		return "", err
 	}
 
+	defer resp.Body.Close()
+
 	var result ServerInfo
 
 	err = api.argo.decodeResponseInto(resp, &result)

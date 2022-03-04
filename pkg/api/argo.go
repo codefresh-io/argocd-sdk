@@ -111,6 +111,7 @@ func (a argo) requestAPI(opt *requestOptions) (*http.Response, error) {
 	}
 	if opt.body != nil {
 		body, _ = json.Marshal(opt.body)
+		fmt.Println(string(body))
 	}
 	request, err := http.NewRequest(opt.method, finalURL, bytes.NewBuffer(body))
 	request.Header.Set("Authorization", "Bearer "+a.token)

@@ -47,6 +47,8 @@ func (api *api) GetClusters() ([]ClusterItem, error) {
 		return nil, err
 	}
 
+	defer resp.Body.Close()
+
 	var result Cluster
 
 	err = api.argo.decodeResponseInto(resp, &result)
@@ -70,6 +72,8 @@ func (api *api) CreateCluster(clusterOpt ClusterOpt) (*map[string]interface{}, e
 			"upsert": "true",
 		},
 	})
+
+	defer resp.Body.Close()
 
 	err = api.argo.decodeResponseInto(resp, &r)
 
